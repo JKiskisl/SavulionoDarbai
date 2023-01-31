@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace SavulionisFirst
 {
@@ -8,25 +9,41 @@ namespace SavulionisFirst
         static void Main(string[] args)
         {
             //sample data
-            List<Sample> samples = new List<Sample>
+            List<Sample> samples = new List<Sample>();
+            using (StreamReader sr = new StreamReader("C:\\Users\\smics\\Desktop\\SavulionoDarbai\\SavulionisFirst\\SavulionisFirst\\samples.txt"))
             {
-                new Sample { X=1, Y=2, Class = "+" },
-                new Sample { X=3, Y=4, Class = "+" },
-                new Sample { X=6, Y=4, Class = "+" },
-                new Sample { X=2, Y=1, Class = "-" },
-                new Sample { X=4, Y=1, Class = "-" },
-                new Sample { X=5, Y=2, Class = "-" }
-            };
+                while (!sr.EndOfStream)
+                {
+                    string[] line = sr.ReadLine().Split(',');
+                    samples.Add(new Sample
+                    {
+                        X = int.Parse(line[0]),
+                        Y = int.Parse(line[1]),
+                        Class = line[2]
+                    });
+                }
+            }
 
             //classification
 
-            List<Sample> newSamples = new List<Sample>
+            List<Sample> newSamples = new List<Sample>();
+            using (StreamReader sr = new StreamReader("C:\\Users\\smics\\Desktop\\SavulionoDarbai\\SavulionisFirst\\SavulionisFirst\\newSamples.txt"))
             {
-                new Sample { X=5, Y=3 },
-                new Sample { X=6, Y=3 }
-            };
+                while (!sr.EndOfStream)
+                {
+                    string[] line = sr.ReadLine().Split(',');
+                    newSamples.Add(new Sample
+                    {
+                        X = int.Parse(line[0]),
+                        Y = int.Parse(line[1]),
+                        Class = ""
+                    });
+                }
+            }
 
-            int k = 3;
+            Console.Write("input neighbors: ");
+            int k = Convert.ToInt32(Console.ReadLine());
+
 
             foreach (Sample newSample in newSamples)
             {
@@ -64,6 +81,10 @@ namespace SavulionisFirst
                         className = item.Key;
                         maxCount = item.Value;
                     }
+                    else if (item.Value == maxCount)
+                    {
+                        className = "";
+                    }
                 }
 
 
@@ -83,13 +104,3 @@ namespace SavulionisFirst
         public string Class { get; set; }
     }
 }
-//1. 1,2,+
-//2. 3,4,+
-//3. 6,4,+
-//4. 2,1,-
-//5. 4,1,-
-//6. 5,2,-
-
-//objektai klasifikavimui
-//e7. 5,3
-//e8. 6,3
